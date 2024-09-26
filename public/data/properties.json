@@ -1,0 +1,92 @@
+[
+  {
+      "id": 1,
+      "title": "Cozy Apartment",
+      "description": "A cozy apartment in the heart of the city with great view.",
+      "price": 28469,
+      "location": "New York City, NY",
+      "bedrooms": 2,
+      "image": "/img1.webp"
+  },
+  {
+      "id": 2,
+      "title": "Luxury Villa",
+      "description": "A spacious luxury villa with a private pool and garden.",
+      "price": 47889,
+      "location": "Los Angeles, CA",
+      "bedrooms": 5,
+      "image": "/img2.jpg"
+  },
+  {
+      "id": 3,
+      "title": "Modern Condo",
+      "description": "A modern condo with stunning city views you will fell in love.",
+      "price": 43132,
+      "location": "Chicago, IL",
+      "bedrooms": 3,
+      "image": "/img3.jpg"
+  },
+  {
+      "id": 4,
+      "title": "Suburban House",
+      "description": "A beautiful suburban house with a spacious backyard.",
+      "price": 24499,
+      "location": "New York City, NY",
+      "bedrooms": 4,
+      "image": "/img4.jpg"
+  },
+  {
+      "id": 5,
+      "title": "Beachfront Bungalow",
+      "description": "A charming bungalow located right on the beach.",
+      "price": 44634,
+      "location": "Los Angeles, CA",
+      "bedrooms": 2,
+      "image": "/img5.webp"
+  },
+  {
+      "id": 6,
+      "title": "Downtown Loft",
+      "description": "A trendy loft in the downtown area with high ceilings.",
+      "price": 22092,
+      "location": "Chicago, IL",
+      "bedrooms": 1,
+      "image": "/img6.jpg"
+  },
+  {
+      "id": 7,
+      "title": "Country Cottage",
+      "description": "A peaceful cottage in the countryside with great view.",
+      "price": 10121,
+      "location": "Chicago, IL",
+      "bedrooms": 3,
+      "image": "/img7.jpg"
+  },
+  {
+      "id": 8,
+      "title": "Penthouse Suite",
+      "description": "A luxurious penthouse with panoramic views that you love.",
+      "price": 10719,
+      "location": "Los Angeles, CA",
+      "bedrooms": 4,
+      "image": "/img8.jpg"
+  },
+  {
+      "id": 9,
+      "title": "Rustic Cabin",
+      "description": "A cozy cabin in the mountains, perfect for a weekend getaway.",
+      "price": 18238,
+      "location": "New York City, NY",
+      "bedrooms": 2,
+      "image": "/img9.jpg"
+  },
+  {
+      "id": 10,
+      "title": "Urban Studio",
+      "description": "A small yet stylish studio in the heart of the city.",
+      "price": 39113,
+      "location": "Los Angeles, CA",
+      "bedrooms": 1,
+      "image": "/img10.webp"
+  }
+]

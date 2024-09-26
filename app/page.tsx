@@ -1,101 +1,111 @@
-import Image from "next/image";
+"use client";
+import React, { useState } from "react";
+import Navbar from "./components/navbar";
+import SwiperCard from "./components/swiperCard";
+import Cart from "./components/cart";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import Checkout from "./components/Checkout";
+import PropertiesListing from "./components/PropertiesListing";
+import { Toaster } from "react-hot-toast";
+import { log } from "console";
+import Login from "./components/login";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [login, setLogin] = useState(false)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const [isFavListOpen, setIsFavListOpen] = useState(false);
+
+  const [cartItems, setCartItems] = useState([]);
+  const [isCheckout, setIsCheckout] = useState(false);
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+    setIsFavListOpen(false);
+
+  };
+
+  const toggleLogin = () => {
+   setIsLoginOpen(!isLoginOpen)
+
+  };
+
+  const toggleFavourite = () => {
+    setIsFavListOpen(!isFavListOpen);
+    setIsCartOpen(!isCartOpen);
+
+  };
+
+  const addItemToCart = (item) => {
+    setCartItems((prevItems) => [...prevItems, item]);
+  };
+
+  const proceedToCheckout = () => {
+    setIsCartOpen(false);
+    setIsCheckout(true);
+  };
+
+  const closeCheckout = () => {
+    setIsCheckout(false);
+  };
+
+  const closeLogin=()=>{
+    setIsLoginOpen(!isLoginOpen)
+  }
+
+  return (
+    <div>
+      <Toaster />
+      <Navbar toggleCart={toggleCart} toggleLogin={toggleLogin} toggleFavourite={toggleFavourite}  cartItemCount={cartItems.length} />
+      <button
+        onClick={toggleCart}
+        className="fixed z-40 bottom-4 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition duration-300"
+        aria-label="Open Cart"
+      >
+        <AiOutlineShoppingCart className="text-2xl" />
+      </button>
+      <SwiperCard />
+      <PropertiesListing addItemToCart={addItemToCart} />
+
+      {/* Cart Modal */}
+      {isCartOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50  flex justify-center items-center z-50">
+          
+            <Cart
+              items={cartItems}
+              onProceedToCheckout={proceedToCheckout}
+              isCartOpen={isCartOpen}
+              isFavListOpen={isFavListOpen}
+              toggleCart={toggleCart}
+              // toggleFavourite={toggleFavourite}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      )}
+
+      {/* Checkout Component */}
+      {isCheckout && (
+        <div className="fixed inset-0 bg-white flex justify-center items-center z-50">
+          <Checkout onClose={closeCheckout} />
+        </div>
+      )}
+
+
+      
+      {/* Login Modal */}
+      {isLoginOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50  flex justify-center items-center z-50">
+          
+            <Login
+              isLoginOpen={isLoginOpen}
+              onClose={closeLogin}
+              login={login}
+              setLogin={setLogin}
+            />
+          
+        </div>
+      )}
     </div>
   );
 }
