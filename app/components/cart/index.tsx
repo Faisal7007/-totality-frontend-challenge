@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AiFillPlusSquare, AiFillMinusSquare } from "react-icons/ai";
 import { CiTrash } from "react-icons/ci";
@@ -11,7 +11,8 @@ import {
 } from "@/app/store/cartSlice";
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
+import AuthContext from "@/app/context/AuthContext";
 
 interface CartProps {
   onProceedToCheckout: () => void;
@@ -25,10 +26,9 @@ const Cart: React.FC<CartProps> = ({
   isCartOpen,
   isFavListOpen,
   toggleCart,
-  
 }) => {
   const dispatch = useDispatch();
-  const { items, totalPrice } = useSelector((state : any) => state.cart);
+  const { items, totalPrice } = useSelector((state: any) => state.cart);
   const { favourites } = useSelector((state: any) => state.cart);
 
   const handleRemove = (id: string) => {
@@ -36,9 +36,15 @@ const Cart: React.FC<CartProps> = ({
     dispatch(removeFromCart(id));
   };
 
+  const { auth, toggleLogin }: any = useContext(AuthContext);
+
   const handleRemoveFav = (id: string) => {
-    toast.error("Removed from favourite");
-    dispatch(removeFromFavourite(id));
+    if (auth) {
+      toast.error("Removed from favourite");
+      dispatch(removeFromFavourite(id));
+    } else {
+      toggleLogin();
+    }
   };
 
   return (
@@ -57,7 +63,7 @@ const Cart: React.FC<CartProps> = ({
               <>
                 <div className="h-full">
                   <div className="h-full scrollbar-hide overflow-scroll bg-white rounded-lg p-6">
-                    {items.map((product:any) => (
+                    {items.map((product: any) => (
                       <div
                         key={product.id}
                         className="flex justify-between items-center border-b border-gray-200 py-4"
@@ -161,7 +167,7 @@ const Cart: React.FC<CartProps> = ({
               <>
                 <div className="h-full">
                   <div className="h-full scrollbar-hide overflow-scroll bg-white rounded-lg p-6">
-                    {favourites.map((product:any) => (
+                    {favourites.map((product: any) => (
                       <div
                         key={product.id}
                         className="flex justify-between items-center relative border-b border-gray-200 py-4"

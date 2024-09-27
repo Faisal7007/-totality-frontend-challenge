@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import Login from "./components/login";
 import AuthContext from "./context/AuthContext";
 
+
 interface CartItem {
   id: number;
   name: string;
@@ -38,6 +39,7 @@ export default function Home() {
   const [isFavListOpen, setIsFavListOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCheckout, setIsCheckout] = useState<boolean>(false);
+  const {auth}:any=useContext(AuthContext)
 
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
@@ -50,8 +52,15 @@ export default function Home() {
   };
 
   const proceedToCheckout = () => {
-    setIsCartOpen(false);
-    setIsCheckout(true);
+    if (!auth) {
+    
+      return   setIsCartOpen(false);
+      setIsCheckout(true);
+    }
+    else{
+      toggleLogin();
+
+    }
   };
 
   const closeCheckout = () => {
