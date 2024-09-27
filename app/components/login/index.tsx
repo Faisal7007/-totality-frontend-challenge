@@ -1,10 +1,9 @@
 "use client";
-
+import { imgData } from "@/app/data";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-// Define interfaces for state and props
 interface DefaultState {
   username: string;
   email: string;
@@ -15,19 +14,24 @@ interface DefaultState {
 interface DefaultLoginState {
   email: string;
   password: string;
+  username: string;
+  avatar: string;
 }
 
 interface LoginProps {
   onClose: () => void;
-  login: boolean;
-  isLoginOpen:boolean,
-  setLogin: (login: boolean) => void;
+  isLoginOpen: boolean;
+  toggleLogin: () => void;
+  isRegistered: boolean;
+  setIsRegistered: (registered: boolean) => void;
 }
 
 interface User {
+  id: string;
   email: string;
   password: string;
-  id: string;
+  username: string;
+  avatar: string;
 }
 
 const defaultState: DefaultState = {
@@ -40,101 +44,134 @@ const defaultState: DefaultState = {
 const defaultLoginState: DefaultLoginState = {
   email: "",
   password: "",
+  username: "",
+  avatar: "",
 };
 
-export default function Login({ onClose, login, setLogin }: LoginProps) {
+export default function Login({
+  toggleLogin,
+  isRegistered,
+  setIsRegistered,
+}: LoginProps) {
   const [state, setState] = useState<DefaultState>(defaultState);
-  const [state2, setState2] = useState<DefaultLoginState>(defaultLoginState);
+  const [loginState, setLoginState] =
+    useState<DefaultLoginState>(defaultLoginState);
   const [userObj, setUserObj] = useState<User[]>([]);
-  const [userData, setUserData] = useState<User[]>([]);
-  const [email1, setEmail1] = useState<string>("");
-  const [password1, setPassword1] = useState<string>("");
-
-  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail1(e.target.value);
-  };
-
-  const handlePass = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword1(e.target.value);
-  };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setState((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (isRegistered) {
+      setState((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else {
+      setLoginState((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (state.cnfPwd === state.password) {
-      try {
-        const data = await axios.post(
-          "https://6554c0c563cafc694fe6e489.mockapi.io/auth-properties",
-          {
-            username: state.username,
-            email: state.email,
-            password: state.password,
-          }
-        );
-        console.log(data);
-        setState(defaultState);
-      } catch (error: any) {
-        toast.error(error.message);
-      }
-    } else {
-      toast.error("Password does not match");
+
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(state.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    // Password validation: at least 8 characters, 1 number, and 1 special character
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(state.password)) {
+      toast.error(
+        "Password must be at least 8 characters long, contain at least 1 number, and 1 special character."
+      );
+      return;
+    }
+
+    if (state.cnfPwd !== state.password) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(
+        "https://6554c0c563cafc694fe6e489.mockapi.io/auth-properties",
+        {
+          username: state.username,
+          email: state.email,
+          password: state.password,
+        }
+      );
+      setState(defaultState); // Reset form state
+      toast.success("Registration successful!");
+    } catch (error: any) {
+      toast.error("Registration failed: " + error.message);
     }
   };
 
-  const fetchUserDetails = () => {
-    axios
-      .get("https://6554c0c563cafc694fe6e489.mockapi.io/auth-properties")
-      .then((res) => setUserData(res.data))
-      .catch((rej) => console.log(rej));
+  const fetchUserDetails = async () => {
+    try {
+      const response = await axios.get(
+        "https://6554c0c563cafc694fe6e489.mockapi.io/auth-properties"
+      );
+
+      const users = response.data.map((d: User) => ({
+        id: d.id,
+        email: d.email,
+        password: d.password,
+        username: d.username,
+        avatar: d.avatar,
+      }));
+      setUserObj(users);
+    } catch (error) {
+      console.error("Failed to fetch user details:", error);
+    }
   };
 
   useEffect(() => {
     fetchUserDetails();
-    sessionStorage.removeItem("login");
     localStorage.removeItem("id");
   }, []);
 
-  useEffect(() => {
-    const users = userData.map((d) => ({
-      password: d.password,
-      email: d.email,
-      id: d.id,
-    }));
-    setUserObj(users);
-  }, [userData]);
-
   const submitLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const obj = {
-      email: email1,
-      password: password1,
-    };
-    const func = userObj.filter((d) => d.password === obj.password && d.email === obj.email);
-    if (func.length === 0) {
-      alert("Wrong email or password");
-    } else {
-      sessionStorage.setItem("login", "1");
-      localStorage.setItem("id", func[0].id);
-      console.log("Login successful");
+    const { email, password } = loginState;
+
+    const user = userObj.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (!user) {
+      toast.error("Wrong email or password");
+      return;
     }
+    const randomImage = imgData[Math.floor(Math.random() * imgData.length)];
+
+    localStorage.setItem(
+      "login",
+      JSON.stringify({ token: 1, img: randomImage, name: user.username })
+    );
+    toast.success("Login successful");
+    toggleLogin();
   };
 
   return (
     <>
-      {!login ? (
+      {isRegistered ? (
         <div className="min-h-screen flex items-center justify-center w-[410px] mx-auto p-4 bg-gray-200">
           <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
             <h2 className="text-2xl font-bold mb-6">Create an Account</h2>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Username
                 </label>
                 <input
@@ -148,7 +185,10 @@ export default function Login({ onClose, login, setLogin }: LoginProps) {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email Address
                 </label>
                 <input
@@ -162,7 +202,10 @@ export default function Login({ onClose, login, setLogin }: LoginProps) {
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <input
@@ -176,12 +219,15 @@ export default function Login({ onClose, login, setLogin }: LoginProps) {
                 />
               </div>
               <div>
-                <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="cnfPwd"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Confirm Password
                 </label>
                 <input
                   type="password"
-                  id="confirm-password"
+                  id="cnfPwd"
                   name="cnfPwd"
                   required
                   value={state.cnfPwd}
@@ -191,19 +237,22 @@ export default function Login({ onClose, login, setLogin }: LoginProps) {
               </div>
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
               >
                 Register
               </button>
             </form>
-            <p className="mt-4 text-center">
+            <p className="mt-4 text-sm">
               Already have an account?{" "}
-              <span onClick={() => setLogin(!login)} className="text-indigo-600 cursor-pointer">
-                Login
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={() => setIsRegistered(false)}
+              >
+                Log in
               </span>
             </p>
             <button
-              onClick={onClose}
+              onClick={toggleLogin}
               className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300"
             >
               Go Back
@@ -213,49 +262,64 @@ export default function Login({ onClose, login, setLogin }: LoginProps) {
       ) : (
         <div className="min-h-screen flex items-center justify-center w-[410px] mx-auto p-4 bg-gray-200">
           <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-            <h2 className="text-2xl font-bold mb-6">Login</h2>
+            <h2 className="text-2xl font-bold mb-6">Log In</h2>
             <form className="space-y-4" onSubmit={submitLogin}>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email Address
                 </label>
                 <input
-                  onChange={handleEmail}
                   type="email"
                   id="email"
                   name="email"
                   required
-                  value={email1}
+                  value={loginState.email}
+                  onChange={handleInput}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <input
-                  onChange={handlePass}
-                  value={password1}
                   type="password"
                   id="password"
                   name="password"
                   required
+                  value={loginState.password}
+                  onChange={handleInput}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
               >
-                Login
+                Log In
               </button>
             </form>
-            <p className="mt-4 text-center">
-              Don't have an account?{" "}
-              <span onClick={() => setLogin(false)} className="text-indigo-600 cursor-pointer">
-                Register
+            <p className="mt-4 text-sm">
+              Don&apos;t have an account?{" "}
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={() => setIsRegistered(true)}
+              >
+                Register here
               </span>
             </p>
+            <button
+              onClick={toggleLogin}
+              className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300"
+            >
+              Go Back
+            </button>
           </div>
         </div>
       )}

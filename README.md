@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+This project is a Property Rental Website that allows users to explore, book, and manage their property rentals. Users can register, log in, and log out while utilizing a variety of features designed for convenience and ease of use. The website offers property listing functionalities, booking management, a cart system, and the ability to filter properties based on various criteria like location, price, and the number of bedrooms.
 
-First, run the development server:
+Features
+User Registration and Login: Users can create an account, log in, and log out securely.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Book a Property: Users can select available properties and book them for specific dates.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Favorites: Users can mark properties as favorites for easy access later.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Cart Management: Add properties to the cart, increase or decrease quantities, and proceed to checkout.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Property Filters: Filter properties by:
 
-## Learn More
+Location
+Price range
+Number of bedrooms
+Checkout: After selecting properties and setting dates, users can finalize their booking at checkout.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Tech Stack
+React: Frontend framework for building the user interface.
+Next.js: React framework used for server-side rendering and routing.
+Redux Toolkit: For managing complex state and side effects across the app.
+Context API: For handling global app state related to authentication and user session management.
+Axios: Used for making HTTP requests to the backend.

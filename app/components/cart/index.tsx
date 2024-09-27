@@ -11,13 +11,12 @@ import {
 } from "@/app/store/cartSlice";
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
-import toast from "react-hot-toast"; // Import toast
+import toast from "react-hot-toast"; 
 
 interface CartProps {
   onProceedToCheckout: () => void;
   isCartOpen: boolean;
   isFavListOpen: boolean;
-  items:any,
   toggleCart: () => void;
 }
 

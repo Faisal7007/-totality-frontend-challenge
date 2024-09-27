@@ -28,7 +28,7 @@ const SwiperCard = () => {
           alt={`Image`}
           width={1000}
           height={1000}
-         objectFit="contain" // Ensures the entire image fits without cropping
+         objectFit="contain" 
     className="w-full h-full"
         />
         </SwiperSlide>
@@ -39,7 +39,7 @@ const SwiperCard = () => {
           alt={`Image`}
           width={1000}
           height={1000}
-       objectFit="contain" // Ensures the entire image fits without cropping
+       objectFit="contain" 
     className="w-full h-full"
         />
         </SwiperSlide>
@@ -49,7 +49,7 @@ const SwiperCard = () => {
           alt={`Image`}
           width={1000}
           height={1000}
-          objectFit="contain" // Ensures the entire image fits without cropping
+          objectFit="contain" 
     className="w-full h-full"
         />
         </SwiperSlide>
@@ -59,7 +59,7 @@ const SwiperCard = () => {
           alt={`Image`}
           width={1000}
           height={1000}
-         objectFit="contain" // Ensures the entire image fits without cropping
+         objectFit="contain" 
     className="w-full h-full"
         />
         </SwiperSlide>
@@ -69,7 +69,7 @@ const SwiperCard = () => {
           alt={`Image`}
           width={1000}
           height={1000}
-          objectFit="contain" // Ensures the entire image fits without cropping
+          objectFit="contain" 
     className="w-full h-full"
         />
         </SwiperSlide>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import PropertyCard from "../propertyCard";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/app/store/productSlice";
@@ -10,8 +10,10 @@ interface PropertiesListingProps {
   isCartOpen: boolean;
 }
 
-const PropertiesListing: React.FC<PropertiesListingProps> = ({ isCartOpen }) => {
-  const dispatch = useDispatch<AppDispatch>(); // Properly type dispatch
+const PropertiesListing: React.FC<PropertiesListingProps> = ({
+  isCartOpen,
+}) => {
+  const dispatch = useDispatch<AppDispatch>();
 
   const { data: properties, status } = useSelector(
     (state: RootState) => state.product
@@ -24,7 +26,7 @@ const PropertiesListing: React.FC<PropertiesListingProps> = ({ isCartOpen }) => 
   const [bedrooms, setBedrooms] = useState<number>(0);
 
   useEffect(() => {
-    dispatch(fetchProducts()); // Now it works correctly
+    dispatch(fetchProducts());
   }, [dispatch]);
 
   const filteredProperties = properties.filter((property: any) => {
@@ -38,21 +40,14 @@ const PropertiesListing: React.FC<PropertiesListingProps> = ({ isCartOpen }) => 
     return isLocationMatch && isPriceMatch && isBedroomsMatch;
   });
 
-  const getFavouritePropertyIds = () => {
-    return properties
-      .filter((property: any) =>
-        favourites.some((favourite: any) => favourite.id === property.id)
-      )
-      .map((property: any) => property.id);
+  const favouritePropertyIds = useMemo(() => {
+    return favourites.map((favourite: any) => favourite.id);
+  }, [favourites]);
+
+  
+  const isFavourite = (propertyId: number): boolean => {
+    return favouritePropertyIds.includes(propertyId);
   };
-
-  const [favouritePropertyIds, setFavouritePropertyIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    const ids = getFavouritePropertyIds();
-    setFavouritePropertyIds(ids);
-  }, [properties, favourites]);
-
 
   return (
     <div className="flex">
@@ -66,18 +61,20 @@ const PropertiesListing: React.FC<PropertiesListingProps> = ({ isCartOpen }) => 
         />
       </aside>
 
-      <main className="flex-1 p-4 overflow-y-auto" style={{ maxHeight: "100vh" }}>
+      <main
+        className="flex-1 p-4 overflow-y-auto"
+        style={{ maxHeight: "100vh" }}
+      >
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Property Listings
         </h1>
-
         <div className="grid grid-cols-3 justify-items-center gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1">
           {filteredProperties.length > 0 ? (
             filteredProperties.map((property: any) => (
               <PropertyCard
                 key={property.id}
                 property={property}
-                isFavourite={favouritePropertyIds.includes(property.id)}
+                // isFavourite={isFavourite(property.id)} 
               />
             ))
           ) : (

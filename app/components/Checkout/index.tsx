@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
-// import { RootState } from "@/app/store"; 
 
 interface CheckoutProps {
   onClose: () => void;
