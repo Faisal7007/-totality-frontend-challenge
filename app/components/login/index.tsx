@@ -20,6 +20,7 @@ interface DefaultLoginState {
 interface LoginProps {
   onClose: () => void;
   login: boolean;
+  isLoginOpen:boolean,
   setLogin: (login: boolean) => void;
 }
 

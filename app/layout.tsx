@@ -1,10 +1,11 @@
-"use client"
-// import type { Metadata } from "next";
+// RootLayout.tsx
+"use client";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Provider } from "react-redux";
-import store from "./store/store";
+import { store } from "./store/store"; // Adjust the path accordingly
 import { AuthProvider } from "./context/AuthProvider";
+import CartLoader from "./store/CartLoader"; // Adjust the path accordingly
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,17 +30,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-
-
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Provider store={store}>
-        <AuthProvider>
-          {children}
-          
-        </AuthProvider>
-          </Provider>
+          <AuthProvider>
+            <CartLoader /> 
+            {children}
+          </AuthProvider>
+        </Provider>
       </body>
     </html>
   );

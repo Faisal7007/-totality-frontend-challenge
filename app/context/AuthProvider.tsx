@@ -1,11 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import AuthContext from "./AuthContext";
 
-export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(false);
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const isAuthenticated = localStorage.getItem("login");
+interface AuthContextType {
+  auth: boolean;
+  setAuth: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoginOpen: boolean;
+  toggleLogin: () => void;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [auth, setAuth] = useState<boolean>(false);
+  const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
+
+  const isAuthenticated = typeof window !== "undefined" ? localStorage.getItem("login") : null;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -13,18 +24,14 @@ export const AuthProvider = ({ children }) => {
     } else {
       setAuth(false);
     }
-  });
-  
-  const toggleLogin = () => {
-    setIsLoginOpen(!isLoginOpen)
- 
-   };
+  }, [isAuthenticated]);
 
-  // if (auth === null) {
-  //   return <div>Loading...</div>;
-  // }
+  const toggleLogin = () => {
+    setIsLoginOpen((prev) => !prev);
+  };
+
   return (
-    <AuthContext.Provider value={{ auth, setAuth,isLoginOpen,toggleLogin }}>
+    <AuthContext.Provider value={{ auth, setAuth, isLoginOpen, toggleLogin } as AuthContextType}>
       {children}
     </AuthContext.Provider>
   );

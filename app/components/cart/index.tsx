@@ -12,12 +12,12 @@ import {
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
 import toast from "react-hot-toast"; // Import toast
-import { RootState } from "@/app/store"; // Import the RootState for correct typing of Redux state
 
 interface CartProps {
   onProceedToCheckout: () => void;
   isCartOpen: boolean;
   isFavListOpen: boolean;
+  items:any,
   toggleCart: () => void;
 }
 
@@ -26,10 +26,11 @@ const Cart: React.FC<CartProps> = ({
   isCartOpen,
   isFavListOpen,
   toggleCart,
+  
 }) => {
   const dispatch = useDispatch();
-  const { items, totalPrice } = useSelector((state: RootState) => state.cart);
-  const { favourites } = useSelector((state: RootState) => state.cart);
+  const { items, totalPrice } = useSelector((state : any) => state.cart);
+  const { favourites } = useSelector((state: any) => state.cart);
 
   const handleRemove = (id: string) => {
     toast.error("Remove from cart");
@@ -57,7 +58,7 @@ const Cart: React.FC<CartProps> = ({
               <>
                 <div className="h-full">
                   <div className="h-full scrollbar-hide overflow-scroll bg-white rounded-lg p-6">
-                    {items.map((product) => (
+                    {items.map((product:any) => (
                       <div
                         key={product.id}
                         className="flex justify-between items-center border-b border-gray-200 py-4"
@@ -161,7 +162,7 @@ const Cart: React.FC<CartProps> = ({
               <>
                 <div className="h-full">
                   <div className="h-full scrollbar-hide overflow-scroll bg-white rounded-lg p-6">
-                    {favourites.map((product) => (
+                    {favourites.map((product:any) => (
                       <div
                         key={product.id}
                         className="flex justify-between items-center relative border-b border-gray-200 py-4"

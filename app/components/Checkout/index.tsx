@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from "@/app/store"; // Assuming RootState is the type of your Redux store state
+// import { RootState } from "@/app/store"; 
 
 interface CheckoutProps {
   onClose: () => void;
@@ -17,7 +17,7 @@ interface FormData {
 }
 
 const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
-  const { items, totalPrice } = useSelector((state: RootState) => state.cart);
+  const { items, totalPrice } = useSelector((state:any) => state.cart);
 
   const [formData, setFormData] = useState<FormData>({
     name: '',

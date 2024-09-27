@@ -11,6 +11,7 @@ interface NavbarProps {
   toggleCart: () => void;
   toggleLogin: () => void;
   toggleFavourite: () => void;
+  cartItemCount: number; 
 }
 
 // Define the type for cart state from Redux
