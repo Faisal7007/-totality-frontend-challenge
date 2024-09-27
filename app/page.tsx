@@ -39,7 +39,9 @@ export default function Home() {
   const [isFavListOpen, setIsFavListOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCheckout, setIsCheckout] = useState<boolean>(false);
-  const {auth}:any=useContext(AuthContext)
+  const { auth }:any = useContext(AuthContext);
+//  const {toggleLogin} = useContext(AuthContext)
+
 
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
@@ -52,10 +54,11 @@ export default function Home() {
   };
 
   const proceedToCheckout = () => {
-    if (!auth) {
+    if (auth) {
     
-      return   setIsCartOpen(false);
       setIsCheckout(true);
+      setIsCartOpen(false) 
+  
     }
     else{
       toggleLogin();
